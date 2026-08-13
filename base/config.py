@@ -12,7 +12,7 @@ project_root = os.path.dirname(current_dir_path)
 config_file_path = os.path.join(project_root, 'config.ini')
 
 
-class config :
+class Config :
     def __init__(self,config_file=config_file_path):
         #创建配置文件实例
         self.config = configparser.ConfigParser()
@@ -32,10 +32,8 @@ class config :
         #解析日志配置
         self.LOG_FILE = self.config.get('logger', 'log_file', fallback='logs/app.log')
 
-config = config()
+config = Config()
 
 
 if __name__ == '__main__':
-    config_file=r'C:\Users\10413\PycharmProjects\FA-ops-rag\config.ini'
-    conf=config(config_file)
-    print(conf.LOG_FILE)
+    print(config.LOG_FILE)
