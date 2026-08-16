@@ -16,7 +16,7 @@ class Config :
     def __init__(self,config_file=config_file_path):
         #创建配置文件实例
         self.config = configparser.ConfigParser()
-        self.config.read(config_file)
+        self.config.read(config_file , encoding='utf-8')
 
         #解析MySQL配置
         self.MYSQL_HOST = self.config.get('mysql', 'host', fallback='localhost')
@@ -30,6 +30,26 @@ class Config :
         self.REDIS_PASSWORD = self.config.get('redis', 'password', fallback='None')
         self.REDIS_DB = self.config.get('redis', 'database', fallback='0')
 
+        # Milvus 配置
+        self.MILVUS_HOST = os.getenv('MILVUS_HOST', self.config.get('milvus', 'host', fallback='localhost'))
+        self.MILVUS_PORT = os.getenv('MILVUS_PORT', self.config.get('milvus', 'port', fallback='19530'))
+        self.MILVUS_DATABASE_NAME = os.getenv('MILVUS_DATABASE_NAME',self.config.get('milvus', 'database_name'))
+        self.MILVUS_COLLECTION_NAME = os.getenv('MILVUS_COLLECTION_NAME',self.config.get('milvus', 'collection_name'))
+
+        # LLM 配置
+        self.LLM_MODEL = self.config.get('llm', 'model', fallback='qwen-plus')
+        self.DASHSCOPE_API_KEY = os.getenv('DASHSCOPE_API_KEY', self.config.get('llm', 'dashscope_api_key'))
+        self.DASHSCOPE_BASE_URL = self.config.get('llm', 'dashscope_base_url',fallback='https://dashscope.aliyuncs.com/compatible-mode/v1')
+
+        # 检索参数
+        self.PARENT_CHUNK_SIZE = self.config.getint('retrieval', 'parent_chunk_size', fallback=1200)
+        self.CHILD_CHUNK_SIZE = self.config.getint('retrieval', 'child_chunk_size', fallback=300)
+        self.CHUNK_OVERLAP = self.config.getint('retrieval', 'chunk_overlap', fallback=50)
+        self.RETRIEVAL_K = self.config.getint('retrieval', 'retrieval_k', fallback=5)
+        self.CANDIDATE_M = self.config.getint('retrieval', 'candidate_m', fallback=2)
+
+        # 应用配置
+        self.VALID_SOURCES = eval(self.config.get('app', 'valid_sources'))
         #解析日志配置
         self.LOG_FILE = self.config.get('logger', 'log_file', fallback='logs/app.log')
 

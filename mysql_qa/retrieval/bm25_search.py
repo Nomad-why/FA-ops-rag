@@ -87,8 +87,8 @@ class BM25Search:
             top_score = softmax_score[top_idx]
             logger.info(f"问题内容:"+query+f",匹配得到的最高概率为{top_score}")
             if top_score > threshold:
-                original_question = self.original_questions(top_idx)
-                answer = self.redis_client.fetch_answer(original_question)
+                original_question = self.original_questions[top_idx]
+                answer = self.mysql_client.fetch_answer(original_question)
                 if answer:
                     logger.info("大于相似度阈值的mysql命中，作为高可靠问题存入redis")
                     self.redis_client.set_data(f'answer:{query}', answer)
