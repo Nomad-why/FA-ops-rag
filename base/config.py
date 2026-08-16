@@ -18,6 +18,13 @@ class Config :
         self.config = configparser.ConfigParser()
         self.config.read(config_file , encoding='utf-8')
 
+        #RAG工程中模型、数据、文档加载器路径配置
+        self.PROJECT_ROOT = os.path.dirname(os.path.dirname(__file__))
+        self.LOG_DIR = os.path.join(self.PROJECT_ROOT, 'logs')
+        self.DATA_DIR = os.path.join(self.PROJECT_ROOT, 'rag_qa/data')
+        self.MODELS_DIR = os.path.join(self.PROJECT_ROOT, 'rag_qa/models')
+        self.EDU_DOCUMENT_LOADERS_DIR = os.path.join(self.PROJECT_ROOT, 'rag_qa/edu_document_loaders')
+
         #解析MySQL配置
         self.MYSQL_HOST = self.config.get('mysql', 'host', fallback='localhost')
         self.MYSQL_USER = self.config.get('mysql', 'user', fallback='root')
