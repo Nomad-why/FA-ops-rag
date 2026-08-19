@@ -65,7 +65,7 @@ def load_documents_from_directory(directory_path):
                         # 文档类别、文件路径、添加时的时间戳
                         doc.metadata["source"] = source
                         doc.metadata["file_path"] = file_path
-                        doc.metadata["timestamp"] = datetime.now()
+                        doc.metadata["timestamp"] = datetime.now().isoformat()
                     documents.extend(loaded_docs)
                     logger.info(f"成功加载{file_path}路径下文件")
                 except Exception as e:
