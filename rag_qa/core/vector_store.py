@@ -11,6 +11,8 @@ from langchain_core.documents import Document
 from sentence_transformers import CrossEncoder
 # hashlib模块生成唯一 ID 的哈希值
 import hashlib
+##todo为什么这里获取不到同目录下的脚本
+sys.path.append("C:/Users/10413/PycharmProjects/FA-ops-rag/rag_qa/core")
 from document_processor import *
 from base import config
 from base import logger

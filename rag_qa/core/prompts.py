@@ -15,11 +15,11 @@ class RAGPrompts:
             上下文: {context}  
             问题: {question}  
 
-            如果无法回答，请回复：“信息不足，无法回答，请联系人工客服，电话：{phone}。”  
+            如果无法回答，请回复：“信息不足，无法回答，请联系人工客服。”  
             回答:  
             """,
             #   定义输入变量
-            input_variables=["context", "question", "phone"],
+            input_variables=["context", "question"],
         )
 
     # 定义假设问题生成的 Prompt 模板
