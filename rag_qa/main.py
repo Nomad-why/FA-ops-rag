@@ -62,7 +62,7 @@ def main(query_mode=True, directory_path="data"):
         logger.error(f"初始化 VectorStore 失败 (请检查 Milvus 连接配置): {e}")
         print("错误：无法连接到向量数据库，程序无法继续。")
         return
-
+    ##todo数据增量更新模式待增加
     # 根据模式执行不同操作
     if not query_mode:
         # --- 数据处理模式 ---
@@ -147,7 +147,7 @@ if __name__ == "__main__":
     # main(query_mode=False)
     # 或者通过命令行参数控制
     import argparse
-    parser = argparse.ArgumentParser(description="EduRAG System Main Entry Point")
+    parser = argparse.ArgumentParser(description="OpsRAG System Main Entry Point")
     parser.add_argument('--data-processing', action='store_true', help='Run in data processing mode instead of query mode.')
     parser.add_argument('--data-dir', type=str, default='./data', help='Path to the data directory.')
     args = parser.parse_args()
