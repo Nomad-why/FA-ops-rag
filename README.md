@@ -1,7 +1,9 @@
 # FA-ops-rag
 ## 项目简介
 
-用于辅助软件系统生产环境一/二线运维进行问题定位与修复开发，提升问题单处理效率减少管理升级次数，基于问题案例整理与系统架构文档作为数据源的RAG系统，现重构为通用软件运维RAG系统
+用于辅助软件系统生产环境一/二线运维进行问题定位与修复开发，提升问题单处理效率减少管理升级次数，基于问题案例整理与系统架构文档作为数据源的RAG系统。
+文档加载使用先切分为父子块，分别存入向量库与关系型数据库，子块用于检索，父块用于生成方式提升系统运行效率。
+检索方面先用BM25进行数据库文档检索，后使用稠密/稀疏混合检索向量方式做到关键字与语义检索的优势互补，同时实现对请求的递进处理，尽可能用较小成本完成回答。
 
 ## 技术栈
 Python + LangChain + Milvus + Redis + Mysql + RAGAS...
@@ -40,7 +42,33 @@ Python + LangChain + Milvus + Redis + Mysql + RAGAS...
 **结构化数据联动**：可进行定制化开发打通企业监控平台，结合实时告警和历史工单数据进行交叉验证，提升诊断准确率。
 
 ## 架构设计
-待更新
+graph TD
+    User([用户提问]) --> Embedding[文本嵌入 Embedding]
+    Embedding --> BM25{BM25 关键词匹配}
+
+    %% 命中分支：直接返回
+    BM25 -- 命中 --> Redis[(Redis 缓存)]
+    BM25 -- 命中 --> MySQL[(MySQL 持久层)]
+    Redis --> DirectResponse([直接返回结果])
+    MySQL --> DirectResponse
+
+    %% 未命中分支：进入智能路由与混合检索
+    BM25 -- 未命中 / 置信度低 --> Intent[意图识别模块]
+    Intent --> Strategy[检索策略识别]
+    
+    subgraph Hybrid_Retrieval [混合检索层]
+        Strategy --> Sparse[稀疏检索]
+        Strategy --> Dense[稠密检索 向量匹配]
+    end
+
+    Sparse --> Assemble[组装提示词 Prompt]
+    Dense --> Assemble
+    
+    Assemble --> LLM[调用大语言模型 LLM]
+    LLM --> FinalResponse([最终回答])
+
+
+  
 ## 快速体验
 待更新
 ## 预计的迭代内容
