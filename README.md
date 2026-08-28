@@ -42,6 +42,7 @@ Python + LangChain + Milvus + Redis + Mysql + RAGAS...
 **结构化数据联动**：可进行定制化开发打通企业监控平台，结合实时告警和历史工单数据进行交叉验证，提升诊断准确率。
 
 ## 架构设计
+```mermaid
 graph TD
     User([用户提问]) --> Embedding[文本嵌入 Embedding]
     Embedding --> BM25{BM25 关键词匹配}
@@ -61,12 +62,20 @@ graph TD
         Strategy --> Dense[稠密检索 向量匹配]
     end
 
-    Sparse --> Assemble[组装提示词 Prompt]
-    Dense --> Assemble
+    %% 核心逻辑：父子块映射重组与重排序
+    subgraph Context_Processing [上下文处理层]
+        Sparse --> Child_Retrieval[检索到子块]
+        Dense --> Child_Retrieval
+        
+        Child_Retrieval -- 索引映射 --> Parent_Block[获取对应父块]
+        
+        Parent_Block --> Rerank[文档重排序 Rerank]
+        Rerank -- 按相关性打分 --> Assemble[组装提示词 Prompt]
+    end
     
     Assemble --> LLM[调用大语言模型 LLM]
     LLM --> FinalResponse([最终回答])
-
+```
 
   
 ## 快速体验
